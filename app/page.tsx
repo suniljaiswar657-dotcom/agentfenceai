@@ -1,5 +1,6 @@
 "use client";
 import {useMemo,useState} from "react";
+import LogoutButton from "@/components/LogoutButton";
 type Agent={id:number;name:string;kind:string;status:"Active"|"Paused";scope:string;risk:"Low"|"Medium"|"High"};
 type Approval={id:number;agent:string;action:string;target:string;risk:"High"|"Critical"};
 const seed:Agent[]=[
@@ -20,7 +21,7 @@ export default function Home(){
  function add(){if(!name.trim())return;setAgents(a=>[{id:Date.now(),name:name.trim(),kind,status:"Paused",scope:"No permissions",risk:"Low"},...a]);setName("");setModal(false);setTab("Agents");setToast("Demo agent registered with zero permissions.");}
  const nav=[["Overview","▦"],["Agents","◈"],["Approvals","⌑"],["Activity log","⌁"],["Policies","⬡"]];
  return <main className="app"><aside className="sidebar"><a className="brand" href="#"><b>⬡</b><span>AGENTFENCE<em>AI</em><small>AGENT GOVERNANCE</small></span></a><div className="workspace">● &nbsp; ACME WORKSPACE <span>⌄</span></div><label className="navlabel">WORKSPACE</label><nav>{nav.map(([n,i])=><button key={n} onClick={()=>setTab(n)} className={tab===n?"selected":""}><Glyph>{i}</Glyph>{n}{n==="Approvals"&&queue.length>0&&<b className="count">{queue.length}</b>}</button>)}</nav><div className="sidebottom"><div className="sidecard"><b>Security posture</b><p>Keep every agent within its boundaries.</p><small>● DEMO ENVIRONMENT</small></div><button className="settings">⚙ &nbsp; Settings</button><div className="profile"><b>AF</b><span>Workspace Admin<small>admin@example.com</small></span></div></div></aside>
- <section className="main"><header><span>Workspace <i>/</i> <b>{tab}</b></span><div><label className="demo">● DEMO MODE</label><b className="user">AF</b></div></header><div className="content">
+ <section className="main"><header><span>Workspace <i>/</i> <b>{tab}</b></span><div><label className="demo">● DEMO MODE</label><LogoutButton/><b className="user">AF</b></div></header><div className="content">
  <div className="heading"><div><small className="eyebrow">THURSDAY, NOVEMBER 20, 2026 · SECURITY OVERVIEW</small><h1>{tab==="Overview"?"Command center":tab}</h1><p>A clear view of your AI agents, permissions, and decisions.</p></div><button className="primary" onClick={()=>setModal(true)}>＋ Add agent</button></div>
  <div className="notice"><b>i</b><span><strong>Preview workspace.</strong> This dashboard uses local sample data. No real agents are connected and no external actions are executed.</span></div>
  {tab==="Overview"&&<><div className="stats">{[["REGISTERED AGENTS",agents.length,"Across this workspace","◈"],["ACTIVE AGENTS",active,"Paused agents cannot run","⌁"],["PENDING APPROVALS",queue.length,"Human decision required","◷"],["POLICY BLOCKS","07","Illustrative sample metric","⊘"]].map(([label,val,foot,ic],i)=><article className="stat" key={label}><div>{label}<b className={"staticon s"+i}>{ic}</b></div><strong>{String(val).padStart(2,"0")}</strong><small>{foot}</small></article>)}</div>
