@@ -22,6 +22,21 @@ npm run dev
 ```
 Open http://localhost:3000.
 
+## First backend slice: policy decision API
+
+A server-side policy evaluation endpoint is available at `POST /api/policy/decision`.
+
+Example request:
+```json
+{ "agentId": "agent_demo_support", "action": "ticket.read" }
+```
+
+Supported demo agent IDs: `agent_demo_support`, `agent_demo_analyst`, and `agent_demo_outbound`.
+Supported actions: `ticket.read`, `crm.read`, `email.send`, and `customer.export`.
+Unknown agents, unknown actions, and missing scopes are denied. Email sending and customer exports return `approval_required`. The API never authorizes execution (`executionAuthorized: false`).
+
+**Important:** this is an initial policy-engine slice with a hard-coded demo registry. It has no authentication, tenant isolation, database persistence, approval verification, or execution gateway. Do not connect it to live agents or treat it as production security.
+
 ## Planned architecture
 - Next.js operator console
 - FastAPI policy decision and audit service
