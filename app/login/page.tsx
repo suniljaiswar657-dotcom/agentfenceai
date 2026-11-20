@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const search = useSearchParams();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -61,7 +60,7 @@ export default function LoginPage() {
         if (orgError) throw orgError;
       }
 
-      const next = search.get("next") || "/";
+      const next = new URLSearchParams(window.location.search).get("next") || "/";
       router.replace(next.startsWith("/") && !next.startsWith("//") ? next : "/");
       router.refresh();
     } catch (err) {
@@ -92,8 +91,6 @@ export default function LoginPage() {
           <label style={{ display: "block", color: "#b9c2cb", fontSize: 11, marginBottom: 18 }}>Password<input required type="password" minLength={8} autoComplete={mode === "signin" ? "current-password" : "new-password"} value={password} onChange={e => setPassword(e.target.value)} style={fieldStyle} /></label>
           {error && <p role="alert" style={{ color: "#ff858a", fontSize: 12, lineHeight: 1.5 }}>{error}</p>}
           {message && <p role="status" style={{ color: "#76c9a1", fontSize: 12, lineHeight: 1.5 }}>{message}</p>}
-          {search.get("setup") === "missing-env" && <p style={{ color: "#e6b966", fontSize: 12 }}>Vercel environment variables abhi configure nahi hue hain.</p>}
-          {search.get("error") && <p style={{ color: "#ff858a", fontSize: 12 }}>Email verification ya workspace setup complete nahi hua. Dobara sign in try karo.</p>}
           <button disabled={busy} type="submit" style={{ width: "100%", padding: 13, border: "1px solid #ff777c", borderRadius: 6, background: "#e95860", color: "white", fontWeight: 700, cursor: busy ? "wait" : "pointer", opacity: busy ? .65 : 1 }}>{busy ? "Please wait…" : mode === "signin" ? "Sign in securely →" : "Create secure account →"}</button>
         </form>
         <p style={{ color: "#6f7c88", fontSize: 10, lineHeight: 1.6, marginTop: 20 }}>Protected by Supabase Auth and database Row Level Security. Agent execution remains disabled in this preview.</p>
